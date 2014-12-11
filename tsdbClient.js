@@ -177,6 +177,64 @@ module.exports = function(conf) {
         }
 
         unirest.get(full_host + ENDPOINTS.annotation)
+            .query(request)
+            .end(function(response) {
+                deferred.resolve(response.body);
+            });
+
+        return deferred.promise;
+    };
+
+
+    /**
+     * query tsdb for data points (dps)
+     * http://opentsdb.net/docs/build/html/api_http/query/index.html
+     * @param  {[type]} start   [description]
+     * @param  {[type]} end     [description]
+     * @param  {[type]} queries [description]
+     * @return {[type]}         [description]
+     */
+
+
+    /**
+     * query tsdb for data points (dps)
+     * @param  Int start The start time for the query. This can be a relative or absolute timestamp. See Querying or Reading Data for details.
+     * @param  Int end An end time for the query. If not supplied, the TSD will assume the local system time on the server. This may be a relative or absolute timestamp. See Querying or Reading Data for details.
+     * @param  Array queries           One or more sub queries used to select the time series to return. These may be metric m or TSUID tsuids queries
+     * @param  Boolean showTSUIDs        Whether or not to output the TSUIDs associated with timeseries in the results. If multiple time series were aggregated into one set, multiple TSUIDs will be returned in a sorted manner
+     * @param  Boolean msResolution      Whether or not to output data point timestamps in milliseconds or seconds. If this flag is not provided and there are multiple data points within a second, those data points will be down sampled using the query's aggregation function
+     * @param  Boolean globalAnnotations  Whether or not the query should retrieve global annotations for the requested timespan
+     * @param  Boolean noAnnotations     Whether or not to return annotations with a query. The default is to return annotations for the requested timespan but this flag can disable the return. This affects both local and global notes and overrides globalAnnotations
+     * @return Defer Object with TSDB Responses
+     */
+    self.query = function(start, end, queries, showTSUIDs, msResolution, globalAnnotations, noAnnotations) {
+        var deferred = Q.defer();
+
+        //default params
+        if (showTSUIDs !== true) {
+            showTSUIDs = false;
+        }
+        if (msResolution !== true) {
+            msResolution = false;
+        }
+        if (globalAnnotations !== true) {
+            globalAnnotations = false;
+        }
+        if (noAnnotations !== false) {
+            noAnnotations = true;
+        }
+
+        var request = {
+            start: start,
+            end: end,
+            queries: queries,
+            showTSUIDs: showTSUIDs,
+            msResolution: msResolution,
+            globalAnnotations: globalAnnotations,
+            noAnnotations: noAnnotations
+        };
+
+        unirest.post(full_host + ENDPOINTS.query)
             .type('json')
             .send(request)
             .end(function(response) {
@@ -184,5 +242,38 @@ module.exports = function(conf) {
             });
 
         return deferred.promise;
-    };
+    }
+
+
+
+    /**
+     * compose sub queries to be sent along with the query tsdb calls
+     * http://opentsdb.net/docs/build/html/api_http/query/index.html
+     * @param  {[type]} metric               [description]
+     * @param  {[type]} metricAggregator     aggregation on metric (vertical aggregation)
+     * @param  {[type]} rate                 [description]
+     * @param  {[type]} tags                 [description]
+     * @param  {[type]} downsampleAggregator methods : sum, min, max, avg, etc.
+     * @param  {[type]} downsampleResolution the actual time of downsample aggregation. For
+     * example, the value can be 15m
+     * @return tsdb subquery object
+     */
+    self.composeQuery = function(metric, metricAggregator, rate, tags, downsampleAggregator, downsampleResolution) {
+        var query = {
+            "aggregator": metricAggregator,
+            "metric": metric
+        };
+
+        if (rate !== undefined) {
+            query.rate = rate;
+        }
+        if (tags !== undefined) {
+            query.tags = tags;
+        }
+        if (downsampleResolution !== undefined && downsampleAggregator !== undefined) {
+            query.downsample = downsampleResolution + "-" + downsampleAggregator //sample 5m-sum
+        }
+
+        return query;
+    }
 }

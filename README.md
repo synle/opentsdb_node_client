@@ -1,7 +1,10 @@
 OpenTSDB Node Client
 ====================
+This is a node client module used to talk to OpenTSDB.
 
 
+User Guide:
+===========
 
 To setup the project:
 ```
@@ -47,4 +50,51 @@ To Get Annotation
 myTsdbClient.getAnnotation('1418330869127').then(function(r) {
     console.log('getAnnotation', r)
 });
+```
+
+
+
+To Query TSDB for Datapoints
+```
+var queries = [];
+queries.push(
+    myTsdbClient.composeQuery(
+        'sys.cpu.nice',
+        'sum',
+        false, {
+            bit: '*'
+        },
+        'sum',
+        '15m'
+    )
+);
+
+myTsdbClient.query(
+    '2014/12/10-14:34:00',
+    '2014/12/11-14:34:00',
+    queries
+).then(function(r) {
+    console.log('query', r);
+});
+
+
+//sample response:
+[{ metric: 'sys.cpu.nice',
+    tags: { bit: '0', host: 'web01' },
+    aggregateTags: [],
+    dps: 
+     { '1418329758': 620,
+       '1418329760': 3968,
+       '1418336866': 995,
+       '1418336873': 544 } },
+  { metric: 'sys.cpu.nice',
+    tags: { bit: '1', host: 'web01' },
+    aggregateTags: [],
+    dps: 
+     { '1418329760': 346,
+       '1418329761': 713,
+       '1418329790': 1208,
+       '1418336977': 291,
+       '1418336984': 13 } }
+]
 ```
