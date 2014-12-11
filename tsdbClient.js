@@ -282,6 +282,7 @@ module.exports = function(conf) {
 
 
     /**
+     * http://opentsdb.net/docs/build/html/api_http/query/index.html
      * @param  {[type]} downsampleAggregator methods : sum, min, max, avg, etc.
      * @param  {[type]} downsampleResolution the actual time of downsample aggregation. For
      * example, the value can be 15m
@@ -298,6 +299,7 @@ module.exports = function(conf) {
 
 
     /**
+     * http://opentsdb.net/docs/build/html/api_http/query/index.html
      * @param counter Boolean Optional    Whether or not the underlying data is a monotonically increasing counter that may roll over
      * @param counterMax  Integer Optional    A positive integer representing the maximum value for the counter.
      * @param resetValue  Integer Optional    An optional value that, when exceeded, will cause the aggregator to return a 0 instead of the calculated rate. Useful when data sources are frequently reset to avoid spurious spikes.
@@ -315,4 +317,65 @@ module.exports = function(conf) {
         }
     }
 
+
+    /**
+     * auto suggestion for metric names
+     * http://opentsdb.net/docs/build/html/api_http/suggest.html
+     * @param type    String  Required    The type of data to auto complete on. Must be one of the following: metrics, tagk or tagv       type        metrics
+     * @param q   String  Optional    A string to match on for the given type     q       web
+     * @param max Integer Optional    The maximum number of suggested results to return. Must be greater than 0   25  max     10
+     * @return Defer Object with suggested items
+     */
+    self.suggest = function(type, q, max) {
+        var deferred = Q.defer();
+
+        if (max === undefined) {
+            type = 20;
+        }
+
+        unirest.post(full_host + ENDPOINTS.suggest)
+            .type('json')
+            .send({
+                "type": type,
+                "q": q,
+                "max": max
+            })
+            .end(function(response) {
+                deferred.resolve(response.body);
+            });
+
+        return deferred.promise;
+    }
+
+
+    /**
+     * http://opentsdb.net/docs/build/html/api_http/suggest.html
+     * @param q   String  Optional    A string to match on for the given type     q       web
+     * @param max Integer Optional    The maximum number of suggested results to return. Must be greater than 0   25  max     10
+     * @return Defer Object with suggested items
+     */
+    self.suggestMetrics = function(q, max) {
+        return self.suggest('metrics', q, max);
+    }
+
+
+    /**
+     * http://opentsdb.net/docs/build/html/api_http/suggest.html
+     * @param q   String  Optional    A string to match on for the given type     q       web
+     * @param max Integer Optional    The maximum number of suggested results to return. Must be greater than 0   25  max     10
+     * @return Defer Object with suggested items
+     */
+    self.suggestTagK = function(q, max) {
+        return self.suggest('tagk', q, max);
+    }
+
+    /**
+     * http://opentsdb.net/docs/build/html/api_http/suggest.html
+     * @param q   String  Optional    A string to match on for the given type     q       web
+     * @param max Integer Optional    The maximum number of suggested results to return. Must be greater than 0   25  max     10
+     * @return Defer Object with suggested items
+     */
+    self.suggestTagV = function(q, max) {
+        return self.suggest('tagv', q, max);
+    }
 }

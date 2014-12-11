@@ -80,7 +80,7 @@ myTsdbClient.query(
 [{ metric: 'sys.cpu.nice',
     tags: { bit: '0', host: 'web01' },
     aggregateTags: [],
-    dps: 
+    dps:
      { '1418329758': 620,
        '1418329760': 3968,
        '1418336866': 995,
@@ -88,11 +88,49 @@ myTsdbClient.query(
   { metric: 'sys.cpu.nice',
     tags: { bit: '1', host: 'web01' },
     aggregateTags: [],
-    dps: 
+    dps:
      { '1418329760': 346,
        '1418329761': 713,
        '1418329790': 1208,
        '1418336977': 291,
        '1418336984': 13 } }
 ]
+```
+
+
+
+To Get Suggestion (autocomplete) for tagK, tagV and metric
+```
+myTsdbClient.suggestMetrics(
+  'sys',
+  3
+).then(function(r) {
+  console.log('suggestMetrics', 'sys', r);
+});
+//sample response
+suggestMetrics sys [ 'sys.cpu.nice' ]
+
+
+
+
+myTsdbClient.suggestTagK(
+  'b',
+  3
+).then(function(r) {
+  console.log('suggestTagK', 'b', r);
+});
+suggestTagK b [ 'bit' ]
+
+
+
+
+myTsdbClient.suggestTagV(
+  'w',
+  3
+).then(function(r) {
+  console.log('suggestTagV', 'w', r);
+});
+//sample response
+suggestTagV w [ 'web01' ]
+
 ```

@@ -38,6 +38,8 @@ myTsdbClient.getAnnotation('1418330869127').then(function(r) {
 
 
 
+
+//query
 var queries = [
     myTsdbClient.composeQuery(
         'sys.cpu.nice',
@@ -56,4 +58,30 @@ myTsdbClient.query(
     queries
 ).then(function(r) {
     console.log('query', r);
+});
+
+
+
+
+//suggest
+myTsdbClient.suggestMetrics(
+    'sys',
+    3
+).then(function(r) {
+    console.log('suggestMetrics', 'sys', r);
+});
+
+myTsdbClient.suggestTagK(
+    'b',
+    3
+).then(function(r) {
+    console.log('suggestTagK', 'b', r);
+});
+
+
+myTsdbClient.suggestTagV(
+    'w',
+    3
+).then(function(r) {
+    console.log('suggestTagV', 'w', r);
 });
