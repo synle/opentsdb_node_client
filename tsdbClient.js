@@ -378,4 +378,69 @@ module.exports = function(conf) {
     self.suggestTagV = function(q, max) {
         return self.suggest('tagv', q, max);
     }
+
+
+
+    /**
+     * http://opentsdb.net/docs/build/html/api_http/version.html
+     * @return Defer Object
+     */
+    self.version = function() {
+        var deferred = Q.defer();
+
+        unirest.get(full_host + ENDPOINTS.version)
+            .end(function(response) {
+                deferred.resolve(response.body);
+            });
+
+        return deferred.promise;
+    }
+
+
+    /**
+     * http://opentsdb.net/docs/build/html/api_http/dropcaches.html
+     * @return {[type]} [description]
+     */
+    self.dropcaches = function() {
+        var deferred = Q.defer();
+
+        unirest.get(full_host + ENDPOINTS.dropcaches)
+            .end(function(response) {
+                deferred.resolve(response.body);
+            });
+
+        return deferred.promise;
+    }
+
+
+    /**
+     * http://opentsdb.net/docs/build/html/api_http/serializers.html
+     * @return {[type]} [description]
+     */
+    self.serializers = function() {
+        var deferred = Q.defer();
+
+        unirest.get(full_host + ENDPOINTS.serializers)
+            .end(function(response) {
+                deferred.resolve(response.body);
+            });
+
+        return deferred.promise;
+    }
+
+
+    /**
+     http://opentsdb.net/docs/build/html/api_http/stats.html
+     * @return {[type]} [description]
+     */
+    self.stats = function() {
+        var deferred = Q.defer();
+
+        unirest.get(full_host + ENDPOINTS.stats)
+            .end(function(response) {
+                deferred.resolve(response.body);
+            });
+
+        return deferred.promise;
+    }
 }

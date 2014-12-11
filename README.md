@@ -134,3 +134,27 @@ myTsdbClient.suggestTagV(
 suggestTagV w [ 'web01' ]
 
 ```
+
+
+
+Misc Methods
+```
+myTsdbClient.version().then(function(r){
+    console.log('version', r);
+});
+
+
+myTsdbClient.dropcaches().then(function(r){
+    console.log('dropcaches', r);
+});
+
+
+myTsdbClient.serializers().then(function(r){
+    console.log('serializers', r);
+});
+
+
+myTsdbClient.stats().then(function(r){
+    console.log('stats', r);
+});
+```
