@@ -189,10 +189,10 @@ module.exports = function(conf) {
     /**
      * query tsdb for data points (dps)
      * http://opentsdb.net/docs/build/html/api_http/query/index.html
-     * @param  {[type]} start   [description]
-     * @param  {[type]} end     [description]
-     * @param  {[type]} queries [description]
-     * @return {[type]}         [description]
+     * @param  {[type]} start
+     * @param  {[type]} end
+     * @param  {[type]} queries
+     * @return {[type]}
      */
 
 
@@ -249,16 +249,16 @@ module.exports = function(conf) {
     /**
      * compose sub queries to be sent along with the query tsdb calls
      * http://opentsdb.net/docs/build/html/api_http/query/index.html
-     * @param  {[type]} metric               [description]
+     * @param  {[type]} metric
      * @param  {[type]} metricAggregator     aggregation on metric (vertical aggregation)
-     * @param  {[type]} rate                 [description]
-     * @param  {[type]} tags                 [description]
-     * @param  {[type]} downsampleAggregator methods : sum, min, max, avg, etc.
-     * @param  {[type]} downsampleResolution the actual time of downsample aggregation. For
+     * @param  {[type]} tags
+     * @param  {[type]} downsample
+     * @param  {[type]} rate
+     * @param  {[type]} rateOption
      * example, the value can be 15m
      * @return tsdb subquery object
      */
-    self.composeQuery = function(metric, metricAggregator, rate, tags, downsampleAggregator, downsampleResolution) {
+    self.composeQuery = function(metric, metricAggregator, tags, downsample, rate, rateOption) {
         var query = {
             "aggregator": metricAggregator,
             "metric": metric
@@ -270,10 +270,49 @@ module.exports = function(conf) {
         if (tags !== undefined) {
             query.tags = tags;
         }
-        if (downsampleResolution !== undefined && downsampleAggregator !== undefined) {
-            query.downsample = downsampleResolution + "-" + downsampleAggregator //sample 5m-sum
+        if (downsample !== undefined) {
+            query.downsample = downsample;
+        }
+        if (rateOption !== undefined) {
+            query.rateOption = rateOption;
         }
 
         return query;
     }
+
+
+    /**
+     * @param  {[type]} downsampleAggregator methods : sum, min, max, avg, etc.
+     * @param  {[type]} downsampleResolution the actual time of downsample aggregation. For
+     * example, the value can be 15m
+     * @return String downsample string: 15m-sum or 1h-avg
+     */
+    self.composeDownsampleString = function(downsampleAggregator, downsampleResolution) {
+        if (downsampleResolution !== undefined && downsampleAggregator !== undefined) {
+            return downsampleResolution + "-" + downsampleAggregator //sample 5m-sum
+        } else {
+            return undefined;
+        }
+    }
+
+
+
+    /**
+     * @param counter Boolean Optional    Whether or not the underlying data is a monotonically increasing counter that may roll over
+     * @param counterMax  Integer Optional    A positive integer representing the maximum value for the counter.
+     * @param resetValue  Integer Optional    An optional value that, when exceeded, will cause the aggregator to return a 0 instead of the calculated rate. Useful when data sources are frequently reset to avoid spurious spikes.
+     * @return Rate Option object
+     */
+    self.composeRateOption = function(counter, counterMax, resetValue) {
+        if (counter !== undefined && counterMax !== undefined && resetValue !== undefined) {
+            return {
+                counter: counter,
+                counterMax: counterMax,
+                resetValue: resetValue,
+            }
+        } else {
+            return undefined;
+        }
+    }
+
 }

@@ -42,12 +42,12 @@ var queries = [];
 queries.push(
     myTsdbClient.composeQuery(
         'sys.cpu.nice',
-        'sum',
-        false, {
+        'sum',{
             bit: '*'
         },
-        'sum',
-        '15m'
+        myTsdbClient.composeDownsampleString('sum', '15m'),
+        false, 
+        myTsdbClient.composeRateOption()
     )
 );
 
