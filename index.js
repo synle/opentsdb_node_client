@@ -38,18 +38,17 @@ myTsdbClient.getAnnotation('1418330869127').then(function(r) {
 
 
 
-var queries = [];
-queries.push(
+var queries = [
     myTsdbClient.composeQuery(
         'sys.cpu.nice',
-        'sum',{
+        'sum', {
             bit: '*'
         },
         myTsdbClient.composeDownsampleString('sum', '15m'),
-        false, 
+        false,
         myTsdbClient.composeRateOption()
     )
-);
+];
 
 myTsdbClient.query(
     '2014/12/10-14:34:00',

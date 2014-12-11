@@ -56,27 +56,25 @@ myTsdbClient.getAnnotation('1418330869127').then(function(r) {
 
 To Query TSDB for Datapoints
 ```
-var queries = [];
-queries.push(
+var queries = [
     myTsdbClient.composeQuery(
         'sys.cpu.nice',
-        'sum',
-        false, {
+        'sum', {
             bit: '*'
         },
-        'sum',
-        '15m'
+        myTsdbClient.composeDownsampleString('sum', '15m'),
+        false,
+        myTsdbClient.composeRateOption()
     )
-);
+];
 
 myTsdbClient.query(
     '2014/12/10-14:34:00',
-    '2014/12/11-14:34:00',
+    '',
     queries
 ).then(function(r) {
     console.log('query', r);
 });
-
 
 //sample response:
 [{ metric: 'sys.cpu.nice',
