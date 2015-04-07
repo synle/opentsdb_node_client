@@ -1,1 +1,1 @@
-module.exports = exports = 'lib/tsdbClient';
+module.exports = exports = require('lib/tsdbClient.js');

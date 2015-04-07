@@ -4,7 +4,7 @@
   "description": "A node js client for opentsdb 2.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha -t 5000"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,8 @@
   "dependencies": {
     "q": "^1.1.2",
     "unirest": "^0.3.2"
+  },
+  "devDependencies": {
+    "chai": "^2.2.0"
   }
 }

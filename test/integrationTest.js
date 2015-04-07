@@ -1,106 +1,40 @@
-var TsdbClient = require('../lib/tsdbClient');
+//public
+var chai = require("chai")
+var assert = chai.assert;
+
+//internal
+var TsdbClient = require('../lib/tsdbClient.js');
 var myTsdbClient = new TsdbClient({
-    host: 'http://localhost',
+    host: 'http://192.168.1.100',
     port: '4242'
 });
 
+describe('TsdbClient', function() {
+    describe('#getAggregators', function() {
+        it('TsdbClient.getAggregators', function(done) {
+            myTsdbClient.getAggregators().then(function(r) {
+                var expectedAggregators = [
+                    'min',
+                    'mimmin',
+                    'max',
+                    'mimmax',
+                    'dev',
+                    'sum',
+                    'avg',
+                    'zimsum'
+                ]
 
-var now = Date.now();
-console.log(now);
+                //run through and delete the list
+                assert.equal(r.length > 0, true);
+                r.forEach(function(agg) {
+                    assert.equal(
+                        expectedAggregators.indexOf(agg) >= 0,
+                        true
+                    )
+                });
 
-myTsdbClient.putMetric(
-    'sys.cpu.nice',
-    now,
-    Math.floor(Math.random() * 1000), {
-        host: "web01",
-        bit: Math.floor(Math.random() * 1000) % 5
-    }
-).then(function() {
-    console.log('putMetric', r);
-});
-
-
-myTsdbClient.getAggregators().then(function(r) {
-    console.log('getAggregators', r);
-});
-
-
-myTsdbClient.putAnnotation(now, 'description', 'notes', {
-    note1: 'a',
-    note2: 'b'
-}).then(function(r) {
-    console.log('putAnnotation', r);
-});
-
-myTsdbClient.getAnnotation('1418330869127').then(function(r) {
-    // console.log('getAnnotation', r)
-});
-
-
-
-
-//query
-var queries = [
-    myTsdbClient.composeQuery(
-        'sys.cpu.nice',
-        'sum', {
-            bit: '*'
-        },
-        myTsdbClient.composeDownsampleString('sum', '15m'),
-        false,
-        myTsdbClient.composeRateOption()
-    )
-];
-
-myTsdbClient.query(
-    '2014/12/10-14:34:00',
-    '',
-    queries
-).then(function(r) {
-    console.log('query', r);
-});
-
-
-
-
-//suggest
-myTsdbClient.suggestMetrics(
-    'sys',
-    3
-).then(function(r) {
-    console.log('suggestMetrics', 'sys', r);
-});
-
-myTsdbClient.suggestTagK(
-    'b',
-    3
-).then(function(r) {
-    console.log('suggestTagK', 'b', r);
-});
-
-
-myTsdbClient.suggestTagV(
-    'w',
-    3
-).then(function(r) {
-    console.log('suggestTagV', 'w', r);
-});
-
-
-
-//misc
-myTsdbClient.version().then(function(r){
-    console.log('version', r);
-});
-
-myTsdbClient.dropcaches().then(function(r){
-    console.log('dropcaches', r);
-});
-
-myTsdbClient.serializers().then(function(r){
-    console.log('serializers', r);
-});
-
-myTsdbClient.stats().then(function(r){
-    console.log('stats', r);
-});
+                done();
+            });
+        })
+    })
+})
