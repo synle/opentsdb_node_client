@@ -8,11 +8,22 @@ User Guide:
 
 To setup the project:
 ```
-var TsdbNodeClient = require('tsdbclient');
-var myTsdbClient = new TsdbNodeClient({
-    host : 'http://localhost',
-    port : '4242'
-  });
+npm install --save git+https://github.com/synle/opentsdb_node_client.git
+```
+
+
+```
+var TsdbClient = require('opentsdb_node_client');
+var myTsdbClient = new TsdbClient({
+    host: 'http://192.168.1.100',
+    port: '4242'
+});
+
+
+myTsdbClient.version().then(function(r) {
+    console.log(r)
+    done();
+});
 ```
 
 
