@@ -4,7 +4,7 @@
   "description": "A node js client for opentsdb 2.0",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -t 5000"
+    "test": "./node_modules/mocha/bin/mocha -t 5000"
   },
   "repository": {
     "type": "git",
