@@ -3,7 +3,7 @@ var chai = require("chai");
 var assert = chai.assert;
 
 //internal
-var TsdbClient = require('../lib/tsdbClient.js');
+var TsdbClient = require('../index');
 var myTsdbClient = new TsdbClient({
     host: 'http://192.168.1.100',
     port: '4242'
