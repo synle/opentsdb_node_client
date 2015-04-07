@@ -10,7 +10,7 @@ var myTsdbClient = new TsdbClient({
 });
 
 describe('TsdbClient', function() {
-    describe('TsdbClient.suggest', function() {
+    describe('suggest', function() {
         it('TsdbClient.suggestMetrics should work', function(done) {
             myTsdbClient.suggestMetrics(
                 'sys',
