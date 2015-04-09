@@ -5,9 +5,28 @@ var assert = chai.assert;
 //internal
 var TsdbClient = require('../index');
 var myTsdbClient = new TsdbClient({
-    host: 'http://192.168.1.100',
-    port: '4242'
+    host: 'http://mockbin.org/bin',
+    port: '80'
 });
+
+//override the endpoint with mockbin stuff
+myTsdbClient._endpoints = {
+    // s: '/s',
+    aggregators: 'a73e80c8-4df1-4993-ac6b-30e2ea8b6d2d',
+    // annotation: '/api/annotation',
+    // config: '/api/config',
+    // dropcaches: '/api/dropcaches',
+    // put: '/api/put',
+    // query: '/api/query',
+    // search: '/api/search',
+    serializers: '/373c16c2-e6aa-40db-8d9a-5d09fcf95f94',
+    stats: '/2777260e-145a-480f-ab75-4a3cb38b5162',
+    suggest: '/84e1779e-d122-4749-b056-c6b314bca51c',
+    // tree: '/api/tree',
+    // uid: '/api/uid',
+    version: '/721cf3cf-db5a-4657-9f83-11dcb7b9ee31'
+}
+
 
 describe('TsdbClient', function() {
     describe('suggest', function() {
@@ -17,12 +36,7 @@ describe('TsdbClient', function() {
                 3
             ).then(function(r) {
                 assert.equal(
-                    r.length > 0 && r.length <= 3,
-                    true
-                );
-
-                assert.equal(
-                    r[0].indexOf('sys') >= 0,
+                    r.length > 0,
                     true
                 );
 
@@ -36,12 +50,7 @@ describe('TsdbClient', function() {
                 3
             ).then(function(r) {
                 assert.equal(
-                    r.length > 0 && r.length <= 3,
-                    true
-                );
-
-                assert.equal(
-                    r[0].indexOf('host') >= 0,
+                    r.length > 0,
                     true
                 );
 
@@ -55,7 +64,7 @@ describe('TsdbClient', function() {
                 3
             ).then(function(r) {
                 assert.equal(
-                    r.length > 0 && r.length <= 3,
+                    r.length > 0,
                     true
                 );
 

@@ -2,24 +2,6 @@ var unirest = require('unirest');
 var Q = require('q');
 
 //not to be shared
-var ENDPOINTS = {
-    s: '/s',
-    aggregators: '/api/aggregators',
-    annotation: '/api/annotation',
-    config: '/api/config',
-    dropcaches: '/api/dropcaches',
-    put: '/api/put',
-    query: '/api/query',
-    search: '/api/search',
-    serializers: '/api/serializers',
-    stats: '/api/stats',
-    suggest: '/api/suggest',
-    tree: '/api/tree',
-    uid: '/api/uid',
-    version: '/api/version'
-}
-
-
 module.exports = function(conf) {
     var self = this;
 
@@ -27,6 +9,23 @@ module.exports = function(conf) {
     var host = conf.host !== undefined ? conf.host : 'localhost';
     var port = conf.port !== undefined ? conf.port : 4242;
     var full_host = host + ":" + port;
+
+    self._endpoints = {
+        s: '/s',
+        aggregators: '/api/aggregators',
+        annotation: '/api/annotation',
+        config: '/api/config',
+        dropcaches: '/api/dropcaches',
+        put: '/api/put',
+        query: '/api/query',
+        search: '/api/search',
+        serializers: '/api/serializers',
+        stats: '/api/stats',
+        suggest: '/api/suggest',
+        tree: '/api/tree',
+        uid: '/api/uid',
+        version: '/api/version'
+    }
 
     /**
      * @return host
@@ -68,7 +67,7 @@ module.exports = function(conf) {
     self.putMetric = function(metric, timestamp, value, tags) {
         var deferred = Q.defer();
 
-        unirest.post(full_host + ENDPOINTS.put)
+        unirest.post(full_host + self._endpoints.put)
             .type('json')
             .send({
                 "metric": metric,
@@ -94,7 +93,7 @@ module.exports = function(conf) {
     self.putMetrics = function(metrics) {
         var deferred = Q.defer();
 
-        unirest.post(full_host + ENDPOINTS.put)
+        unirest.post(full_host + self._endpoints.put)
             .type('json')
             .send(metrics)
             .end(function(response) {
@@ -113,7 +112,7 @@ module.exports = function(conf) {
     self.getAggregators = function() {
         var deferred = Q.defer();
 
-        unirest.get(full_host + ENDPOINTS.aggregators)
+        unirest.get(full_host + self._endpoints.aggregators)
             .end(function(response) {
                 deferred.resolve(response.body);
             });
@@ -147,7 +146,7 @@ module.exports = function(conf) {
             request.tsduid = tsduid;
         }
 
-        unirest.post(full_host + ENDPOINTS.annotation)
+        unirest.post(full_host + self._endpoints.annotation)
             .type('json')
             .send(request)
             .end(function(response) {
@@ -176,7 +175,7 @@ module.exports = function(conf) {
             request.tsuid = tsuid;
         }
 
-        unirest.get(full_host + ENDPOINTS.annotation)
+        unirest.get(full_host + self._endpoints.annotation)
             .query(request)
             .end(function(response) {
                 deferred.resolve(response.body);
@@ -234,7 +233,7 @@ module.exports = function(conf) {
             noAnnotations: noAnnotations
         };
 
-        unirest.post(full_host + ENDPOINTS.query)
+        unirest.post(full_host + self._endpoints.query)
             .type('json')
             .send(request)
             .end(function(response) {
@@ -333,7 +332,7 @@ module.exports = function(conf) {
             type = 20;
         }
 
-        unirest.post(full_host + ENDPOINTS.suggest)
+        unirest.post(full_host + self._endpoints.suggest)
             .type('json')
             .send({
                 "type": type,
@@ -388,7 +387,7 @@ module.exports = function(conf) {
     self.version = function() {
         var deferred = Q.defer();
 
-        unirest.get(full_host + ENDPOINTS.version)
+        unirest.get(full_host + self._endpoints.version)
             .end(function(response) {
                 deferred.resolve(response.body);
             });
@@ -404,7 +403,7 @@ module.exports = function(conf) {
     self.dropcaches = function() {
         var deferred = Q.defer();
 
-        unirest.get(full_host + ENDPOINTS.dropcaches)
+        unirest.get(full_host + self._endpoints.dropcaches)
             .end(function(response) {
                 deferred.resolve(response.body);
             });
@@ -420,7 +419,7 @@ module.exports = function(conf) {
     self.serializers = function() {
         var deferred = Q.defer();
 
-        unirest.get(full_host + ENDPOINTS.serializers)
+        unirest.get(full_host + self._endpoints.serializers)
             .end(function(response) {
                 deferred.resolve(response.body);
             });
@@ -436,7 +435,7 @@ module.exports = function(conf) {
     self.stats = function() {
         var deferred = Q.defer();
 
-        unirest.get(full_host + ENDPOINTS.stats)
+        unirest.get(full_host + self._endpoints.stats)
             .end(function(response) {
                 deferred.resolve(response.body);
             });
