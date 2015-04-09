@@ -39,7 +39,10 @@ describe('TsdbClient', function() {
                     r.length > 0,
                     true
                 );
-
+            }, function(){
+                assert.equal('TsdbClient.suggestMetrics failed', false);
+            }).fin(function(){
+                //callback returns, then end the it test
                 done();
             });
         });
@@ -53,7 +56,10 @@ describe('TsdbClient', function() {
                     r.length > 0,
                     true
                 );
-
+            }, function(){
+                assert.equal('TsdbClient.suggestTagK failed', false);
+            }).fin(function(){
+                //callback returns, then end the it test
                 done();
             });
         });
@@ -68,7 +74,10 @@ describe('TsdbClient', function() {
                     true
                 );
 
-
+            }, function(){
+                assert.equal('TsdbClient.suggestTagV failed', false)
+            }).fin(function(){
+                //callback returns, then end the it test
                 done();
             });
         });
@@ -97,7 +106,10 @@ describe('TsdbClient', function() {
                         true
                     );
                 });
-
+            }, function(){
+                assert.equal('TsdbClient.getAggregators failed', false);
+            }).fin(function(){
+                //callback returns, then end the it test
                 done();
             });
         });
@@ -105,7 +117,6 @@ describe('TsdbClient', function() {
 
         it('TsdbClient.version should work', function(done) {
             myTsdbClient.version().then(function(r) {
-
                 assert.isDefined(r.timestamp);
                 assert.isDefined(r.host);
                 assert.isDefined(r.repo);
@@ -114,7 +125,10 @@ describe('TsdbClient', function() {
                 assert.isDefined(r.user);
                 assert.isDefined(r.repo_status);
                 assert.isDefined(r.version);
-
+            }, function(){
+                assert.equal('TsdbClient.version failed', false);
+            }).fin(function(){
+                //callback returns, then end the it test
                 done();
             });
         });
@@ -125,7 +139,10 @@ describe('TsdbClient', function() {
                     r.length > 0,
                     true
                 )
-
+            }, function(){
+                assert.equal('TsdbClient.serializers failed', false);
+            }).fin(function(){
+                //callback returns, then end the it test
                 done();
             });
         });
@@ -137,7 +154,10 @@ describe('TsdbClient', function() {
                     r.length > 0,
                     true
                 )
-
+            }, function(){
+                assert.equal('TsdbClient.stats failed', false);
+            }).fin(function(){
+                //callback returns, then end the it test
                 done();
             });
         });
