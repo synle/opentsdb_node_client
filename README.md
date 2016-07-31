@@ -8,7 +8,7 @@ User Guide:
 
 To setup the project:
 ```
-npm install --save git+https://github.com/synle/opentsdb_node_client.git
+npm install --save opentsdb-node-client
 ```
 
 
